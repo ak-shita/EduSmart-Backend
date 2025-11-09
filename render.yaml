@@ -3,8 +3,5 @@ services:
     name: edusmart-backend
     env: java
     plan: free
-    buildCommand: "javac -cp lib/* src/*.java -d bin"
-    startCommand: "java -cp bin;lib/* EduSmartServer"
-    envVars:
-      - key: PORT
-        value: 8080
+    buildCommand: "javac -cp \"lib/*\" src/*.java -d bin"
+    startCommand: "java -cp \"bin:lib/*\" EduSmartServer"

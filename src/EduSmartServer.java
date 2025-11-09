@@ -7,7 +7,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class EduSmartServer {
-    private static final int PORT = 8080;
+    private static final int PORT;
+static {
+    String portEnv = System.getenv("PORT");
+    int p = 8080;
+    try {
+        if (portEnv != null && !portEnv.isEmpty()) p = Integer.parseInt(portEnv);
+    } catch (NumberFormatException e) {
+        // fallback to 8080
+    }
+    PORT = p;
+}
+
+private static void setCorsHeaders(HttpExchange exchange) {
+    exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+    exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+}
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -28,6 +44,13 @@ public class EduSmartServer {
     static class FileHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+    setCorsHeaders(exchange);
+    exchange.sendResponseHeaders(204, -1);
+    return;
+}
+setCorsHeaders(exchange);
+
             String path = exchange.getRequestURI().getPath();
             if (path.equals("/")) path = "/index.html";
             
@@ -62,6 +85,15 @@ public class EduSmartServer {
     static class UploadHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+
+        if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+    setCorsHeaders(exchange);
+    exchange.sendResponseHeaders(204, -1);
+    return;
+}
+setCorsHeaders(exchange);
+
+            
             if ("POST".equals(exchange.getRequestMethod())) {
                 InputStream is = exchange.getRequestBody();
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -94,6 +126,13 @@ public class EduSmartServer {
     static class SimplifyHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+    setCorsHeaders(exchange);
+    exchange.sendResponseHeaders(204, -1);
+    return;
+}
+setCorsHeaders(exchange);
+
             if ("POST".equals(exchange.getRequestMethod())) {
                 String text = new String(exchange.getRequestBody().readAllBytes());
 
@@ -114,6 +153,13 @@ public class EduSmartServer {
     static class QuizHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
+    setCorsHeaders(exchange);
+    exchange.sendResponseHeaders(204, -1);
+    return;
+}
+setCorsHeaders(exchange);
+
             if ("POST".equals(exchange.getRequestMethod())) {
 
                 String text = new String(exchange.getRequestBody().readAllBytes());
