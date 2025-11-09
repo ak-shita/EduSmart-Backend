@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: edusmart-backend
-    env: java
-    plan: free
-    buildCommand: "javac -cp \"lib/*\" src/*.java -d bin"
-    startCommand: "java -cp \"bin:lib/*\" EduSmartServer"
