@@ -1,5 +1,5 @@
 # Use an official JDK image
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 
 # Create and switch to app directory
 WORKDIR /app
